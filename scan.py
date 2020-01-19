@@ -32,6 +32,8 @@ tiltStep = 0.5
 isUp = False
 maxPoints = 10000
 maxTilt = 40
+tiltArmLength = 82.55 #in mm, = 3.25 inches
+
 try:
     os.remove("./scan.csv")
     os.remove("./raw_scan.csv")
@@ -57,17 +59,19 @@ try:
             #x = distance * sin(panAngle) * cos(tiltAngle)
             #y = distance * sin(panAngle) * sin(tiltAngle)
             #z = distance * cos(panAngle)
-
             panRad = radians(panAngle)
-            tiltRad = radians(tiltAngle)
+            tiltRad = radians(tiltAngle) #off vertical
+            trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
 
-            #x = distance * sin(tiltAngle) * cos(panAngle)
-            #y = distance * sin(tiltAngle) * sin(panAngle)
-            #z = distance * cos(tiltAngle)
 
-            x = distance * sin(tiltRad) * cos(panRad)
-            y = distance * sin(tiltRad) * sin(panRad)
-            z = distance * cos(tiltRad)
+            # Offset to adjust for lidar sensor movement along tiltArmLength arc
+            deltaZ = tiltArmLength * (cos(tiltRad) - 1)
+            deltaY = tiltArmLength * sin(tiltRad)
+
+
+            x = distance * sin(trueTilt) * cos(panRad)
+            y = distance * sin(trueTilt) * sin(panRad) + deltaY
+            z = distance * cos(trueTilt) + deltaZ
             
             #scan_data.append({'x': x, 'y': y, 'z': z})
             scan_data.append("%f,%f,%f" % (x, y, z) )
