@@ -42,12 +42,12 @@ def scan():
 
     scan_data = []
     raw_data = []
-    tiltAngle = 0
     tiltStep = 0.5
     isUp = False
     maxPoints = 10000
     minTilt = 45
     maxTilt = 165
+    tiltAngle = minTilt
     tiltArmLength = 82.55 #in mm, = 3.25 inches
 
     try:
@@ -143,7 +143,7 @@ def scan():
 
 
     #time.sleep(2)
-    kit.servo[0].angle = 0
+    kit.servo[0].angle = minTilt
     time.sleep(2)   
 
 
