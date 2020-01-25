@@ -1,4 +1,4 @@
-#! usr/bin/env python
+#!/usr/bin/env python2
 
 from adafruit_rplidar import RPLidar
 from adafruit_servokit import ServoKit
