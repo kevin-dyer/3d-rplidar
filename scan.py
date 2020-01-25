@@ -142,21 +142,26 @@ def scan():
         print('Stopping.')
 
 
-    lidar.stop()
-    lidar.stop_motor()
-    #time.sleep(1)
-
-    lidar.disconnect()
-
-
     #time.sleep(2)
     kit.servo[0].angle = 0
     time.sleep(2)   
 
 
+
+lidar.stop()
+lidar.stop_motor()
 # BUtton Code
 while True:
+
+    #time.sleep(1)
     input_state = GPIO.input(26)
     if input_state == False:
         print('Button 1 Pressed')
+
         scan()
+        lidar.stop()
+        lidar.stop_motor()
+
+lidar.stop()
+lidar.stop_motor()
+lidar.disconnect()
