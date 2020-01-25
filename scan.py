@@ -46,7 +46,7 @@ def scan():
     isUp = False
     maxPoints = 10000
     minTilt = 45
-    maxTilt = 165
+    maxTilt = 90
     tiltAngle = minTilt
     tiltArmLength = 82.55 #in mm, = 3.25 inches
 
@@ -59,7 +59,7 @@ def scan():
         print(lidar.info)
 
         print("homing tilt servo.")
-        kit.servo[0].angle = 0
+        kit.servo[0].angle = tiltAngle
         time.sleep(2)
 
         print("starting scan")
@@ -102,7 +102,7 @@ def scan():
             raw_string = '\n'.join(raw_data) + '\n'
             f2.write(raw_string)
 
-            print("tiltAngle: ", tiltAngle)
+            print("tiltAngle: ", tiltAngle, ", tiltRad: ", tiltRad)
 
             print("scan data len: ", len(scan_data))
 
@@ -117,7 +117,7 @@ def scan():
                 #exit scan
                 break
 
-            if tiltAngle == 0:
+            if tiltAngle <= 0:
                 isUp = True
             if isUp:
                 tiltAngle = tiltAngle + tiltStep
