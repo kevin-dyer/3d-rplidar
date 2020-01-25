@@ -24,12 +24,6 @@ GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
-while True:
-    input_state = GPIO.input(26)
-    if input_state == False:
-        print('Button 1 Pressed')
-        scan()
-
 
 # TODO: pass in config for start/stop angels and resolution
 def scan():
@@ -159,3 +153,10 @@ def scan():
     kit.servo[0].angle = 0
     time.sleep(2)   
 
+
+# BUtton Code
+while True:
+    input_state = GPIO.input(26)
+    if input_state == False:
+        print('Button 1 Pressed')
+        scan()
