@@ -1,3 +1,5 @@
+#! usr/bin/env python
+
 from adafruit_rplidar import RPLidar
 from adafruit_servokit import ServoKit
 import RPi.GPIO as GPIO
@@ -30,7 +32,7 @@ while True:
 
 
 # TODO: pass in config for start/stop angels and resolution
-def scan()
+def scan():
     #health = lidar.get_health()
     #print(health)
 
@@ -50,7 +52,8 @@ def scan()
     tiltStep = 0.5
     isUp = False
     maxPoints = 10000
-    maxTilt = 40
+    minTilt = 45
+    maxTilt = 165
     tiltArmLength = 82.55 #in mm, = 3.25 inches
 
     try:
