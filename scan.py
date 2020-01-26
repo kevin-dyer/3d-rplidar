@@ -5,6 +5,7 @@ from adafruit_servokit import ServoKit
 import RPi.GPIO as GPIO
 import time
 import os
+import shutil
 #import open3d as o3d
 
 #from rplidar import RPLidar
@@ -55,7 +56,8 @@ def scan():
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        f = open('./scan-%d.csv'% timestamp, "a+")
+        filename = 'scan-%d.csv'% timestamp
+        f = open('./' + filename, "a+")
         # f2 = open("./raw_scan.csv", "a+")
 
         #print(lidar.info)
@@ -63,8 +65,9 @@ def scan():
         print("homing tilt servo.")
         kit.servo[0].angle = tiltAngle
 
-        lidar.start_motor()
+        #lidar.start_motor()
         lidar.connect()
+        lidar.start_motor()
 
         time.sleep(2)
 
@@ -139,6 +142,8 @@ def scan():
         # f2.close()
         lidar.stop()
         lidar.stop_motor()
+
+        shutil.move('./%s'% filename, '/media/pi/USB30FD/%s'% filename)
 
        # pcd = o3d.geometry.PointCloud()
        # pcd.points = o3d.utility.Vector3dVector(xyz)
