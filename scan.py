@@ -43,7 +43,7 @@ def scan():
     scan_data = []
     raw_data = []
     tiltStep = 0.5
-    isUp = False
+    isUp = True
     maxPoints = 10000
     minTilt = 45
     maxTilt = 90
