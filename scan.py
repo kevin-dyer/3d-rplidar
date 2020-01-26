@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 from adafruit_rplidar import RPLidar
 from adafruit_servokit import ServoKit
@@ -45,9 +45,9 @@ def scan():
     tiltStep = 0.5
     isUp = True
     maxPoints = 10000
-    minTilt = 45
-    maxTilt = 90
-    restAngle = 80
+    minTilt = 75
+    maxTilt = 125
+    restAngle = 100
     tiltAngle = minTilt
     tiltArmLength = 82.55 #in mm, = 3.25 inches
     timestamp = int(time.time())
@@ -55,15 +55,15 @@ def scan():
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        f = open("./scan-" + timestamp + ".csv", "a+")
+        f = open('./scan-%d.csv'% timestamp, "a+")
         # f2 = open("./raw_scan.csv", "a+")
 
-        print(lidar.info)
+        #print(lidar.info)
 
         print("homing tilt servo.")
         kit.servo[0].angle = tiltAngle
 
-        lidar.stop_motor()
+        lidar.start_motor()
         lidar.connect()
 
         time.sleep(2)
@@ -111,11 +111,11 @@ def scan():
 
             # print("tiltAngle: ", tiltAngle, ", tiltRad: ", tiltRad)
 
-            print("scan data len: ", len(scan_data))
+            #print("scan data len: ", len(scan_data))
 
             scan_data = []
             raw_data = []
-            kit.servo[0].angle = restAngle
+            kit.servo[0].angle = tiltAngle
 
 
             if tiltAngle >= maxTilt:
@@ -137,6 +137,8 @@ def scan():
 
         f.close()
         # f2.close()
+        lidar.stop()
+        lidar.stop_motor()
 
        # pcd = o3d.geometry.PointCloud()
        # pcd.points = o3d.utility.Vector3dVector(xyz)
@@ -150,11 +152,11 @@ def scan():
 
 
     #time.sleep(2)
-    kit.servo[0].angle = minTilt
+    kit.servo[0].angle = restAngle
 
     lidar.stop()
     lidar.stop_motor()
-    lidar.disconnect()
+    #lidar.disconnect()
 
     time.sleep(2)
 
@@ -174,6 +176,6 @@ while True:
         # lidar.stop()
         # lidar.stop_motor()
 
-# lidar.stop()
-# lidar.stop_motor()
-# lidar.disconnect()
+lidar.stop()
+lidar.stop_motor()
+lidar.disconnect()
