@@ -18,7 +18,7 @@ kit = ServoKit(channels=16)
 
 #Buttons
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button 1
+GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP) #button 2
 GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -41,28 +41,35 @@ def scan():
 
 
     scan_data = []
-    raw_data = []
+    # raw_data = []
     tiltStep = 0.5
     isUp = False
     maxPoints = 10000
     minTilt = 45
     maxTilt = 90
+    restAngle = 80
     tiltAngle = minTilt
     tiltArmLength = 82.55 #in mm, = 3.25 inches
-
+    timestamp = int(time.time())
     try:
-        os.remove("./scan.csv")
-        os.remove("./raw_scan.csv")
-        f = open("./scan.csv", "a+")
-        f2 = open("./raw_scan.csv", "a+")
+        # os.remove("./scan.csv")
+        # os.remove("./raw_scan.csv")
+
+        f = open("./scan-" + timestamp + ".csv", "a+")
+        # f2 = open("./raw_scan.csv", "a+")
 
         print(lidar.info)
 
         print("homing tilt servo.")
         kit.servo[0].angle = tiltAngle
+
+        lidar.stop_motor()
+        lidar.connect()
+
         time.sleep(2)
 
         print("starting scan")
+        lidar.clear_input()
 
 
 
@@ -94,21 +101,21 @@ def scan():
                 #scan_data.append([x, y, z])
                 #scan_data.append(x + ',' + y + ',' + z)
 
-                raw_data.append("%f,%f,%f" % (tiltAngle, panAngle, distance))
+                # raw_data.append("%f,%f,%f" % (tiltAngle, panAngle, distance))
 
             scan_string = '\n'.join(scan_data) + '\n'
             f.write(scan_string)
 
-            raw_string = '\n'.join(raw_data) + '\n'
-            f2.write(raw_string)
+            # raw_string = '\n'.join(raw_data) + '\n'
+            # f2.write(raw_string)
 
-            print("tiltAngle: ", tiltAngle, ", tiltRad: ", tiltRad)
+            # print("tiltAngle: ", tiltAngle, ", tiltRad: ", tiltRad)
 
             print("scan data len: ", len(scan_data))
 
             scan_data = []
             raw_data = []
-            kit.servo[0].angle = tiltAngle
+            kit.servo[0].angle = restAngle
 
 
             if tiltAngle >= maxTilt:
@@ -129,7 +136,7 @@ def scan():
 
 
         f.close()
-        f2.close()
+        # f2.close()
 
        # pcd = o3d.geometry.PointCloud()
        # pcd.points = o3d.utility.Vector3dVector(xyz)
@@ -144,7 +151,12 @@ def scan():
 
     #time.sleep(2)
     kit.servo[0].angle = minTilt
-    time.sleep(2)   
+
+    lidar.stop()
+    lidar.stop_motor()
+    lidar.disconnect()
+
+    time.sleep(2)
 
 
 
@@ -159,9 +171,9 @@ while True:
         print('Button 1 Pressed')
 
         scan()
-        lidar.stop()
-        lidar.stop_motor()
+        # lidar.stop()
+        # lidar.stop_motor()
 
-lidar.stop()
-lidar.stop_motor()
-lidar.disconnect()
+# lidar.stop()
+# lidar.stop_motor()
+# lidar.disconnect()
