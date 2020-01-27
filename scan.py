@@ -177,21 +177,20 @@ while True:
     #time.sleep(1)
     btn1 = GPIO.input(19)
     btn2 = GPIO.input(26)
-
-    btn3 = GPIO.input(13)
-    btn4 = GPIO.input(6)
-
-    if btn2 == False:
-        print('Button 2 Pressed')
-
-        scan()
+    btn3 = GPIO.input(6)
+    btn4 = GPIO.input(13)
 
     elif btn1 == False:
-        print("Button 1")
+        print("Button 1 pressed, scanning")
+        scan()
+    if btn2 == False:
+        print('Button 2 Pressed')
     elif btn3 == False:
         print("Button 3")
     elif btn4 == False:
-        print("Button 4")
+        print("Button 4 pressed, shutting down")
+        call("sudo shutdown -h now", shell=True)
+
 
 
 lidar.stop()
