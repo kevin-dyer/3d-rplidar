@@ -6,6 +6,8 @@ import RPi.GPIO as GPIO
 import time
 import os
 import shutil
+from subprocess import call
+
 #import open3d as o3d
 
 #from rplidar import RPLidar
@@ -173,13 +175,24 @@ lidar.stop_motor()
 while True:
 
     #time.sleep(1)
-    input_state = GPIO.input(26)
-    if input_state == False:
-        print('Button 1 Pressed')
+    btn1 = GPIO.input(19)
+    btn2 = GPIO.input(26)
+
+    btn3 = GPIO.input(13)
+    btn4 = GPIO.input(6)
+
+    if btn2 == False:
+        print('Button 2 Pressed')
 
         scan()
-        # lidar.stop()
-        # lidar.stop_motor()
+
+    elif btn1 == False:
+        print("Button 1")
+    elif btn3 == False:
+        print("Button 3")
+    elif btn4 == False:
+        print("Button 4")
+
 
 lidar.stop()
 lidar.stop_motor()
