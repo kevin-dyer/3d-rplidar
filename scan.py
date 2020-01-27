@@ -29,7 +29,7 @@ GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 # TODO: pass in config for start/stop angels and resolution
-def scan():
+def scan(deltaTilt=45, halfPan=False, highRes=False):
     #health = lidar.get_health()
     #print(health)
 
@@ -45,20 +45,20 @@ def scan():
 
     scan_data = []
     # raw_data = []
-    tiltStep = 0.5
     isUp = True
-    maxPoints = 10000
-    minTilt = 75
-    maxTilt = 125
-    restAngle = 100
+    restAngle = 100 #Angle where lidar is horizontal
+    tiltArmLength = 82.55 #in mm, = 3.25 inches - distance from lidar to servo tilt axis
+    minTilt = restAngle - deltaTilt
+    maxTilt = restAngle + deltaTilt
+    tiltStep = highRes ? 0.1 : 0.5
+    
     tiltAngle = minTilt
-    tiltArmLength = 82.55 #in mm, = 3.25 inches
     timestamp = int(time.time())
     try:
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        filename = 'scan-%d.csv'% timestamp
+        filename = 'scan-%s-%s-%d.csv'% timestamp, halfPan ? 'half' : 'full', highRes ? 'h' : 'l'
         f = open('./' + filename, "a+")
         # f2 = open("./raw_scan.csv", "a+")
 
@@ -83,13 +83,17 @@ def scan():
             for (_, panAngle, distance) in scan:
                 #scan_data[min([359, floor(angle)])] = distance
 
+                #Only save half rotation if halfPan === True
+                if halfPan && panAngle > 180:
+                    break
                 
                 #x = distance * sin(panAngle) * cos(tiltAngle)
                 #y = distance * sin(panAngle) * sin(tiltAngle)
                 #z = distance * cos(panAngle)
                 panRad = radians(panAngle)
                 tiltRad = radians(tiltAngle) #off vertical
-                trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
+                # trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
+                trueTilt = radians(restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle - not sure if I shoujld use restAngle or 90
 
 
                 # Offset to adjust for lidar sensor movement along tiltArmLength arc
@@ -180,13 +184,22 @@ while True:
     btn3 = GPIO.input(6)
     btn4 = GPIO.input(13)
 
+    #Scan front side in high resolution
     if btn1 == False:
         print("Button 1 pressed, scanning")
-        scan()
+        scan(45, True, True)
+
+    # Scan front side low resolution
     elif btn2 == False:
         print('Button 2 Pressed')
+        scan(45, True, False)
+
+    # Scan entire area, low res
     elif btn3 == False:
         print("Button 3")
+        scan(90, False, False)
+
+    # Shutdown
     elif btn4 == False:
         print("Button 4 pressed, shutting down")
         call("sudo shutdown -h now", shell=True)
