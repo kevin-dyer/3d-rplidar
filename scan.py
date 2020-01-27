@@ -180,10 +180,10 @@ while True:
     btn3 = GPIO.input(6)
     btn4 = GPIO.input(13)
 
-    elif btn1 == False:
+    if btn1 == False:
         print("Button 1 pressed, scanning")
         scan()
-    if btn2 == False:
+    elif btn2 == False:
         print('Button 2 Pressed')
     elif btn3 == False:
         print("Button 3")
