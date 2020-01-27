@@ -84,7 +84,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 #scan_data[min([359, floor(angle)])] = distance
 
                 #Only save half rotation if halfPan === True
-                if halfPan && panAngle > 180:
+                if halfPan and panAngle > 180:
                     break
                 
                 #x = distance * sin(panAngle) * cos(tiltAngle)
