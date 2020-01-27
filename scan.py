@@ -58,7 +58,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        filename = 'scan-%s-%s-%d.csv'% timestamp, halfPan ? 'half' : 'full', highRes ? 'h' : 'l'
+        filename = 'scan-%s-%s-%d.csv'% timestamp, ('full', 'half')[halfPan], ('low', 'high')[highRes]
         f = open('./' + filename, "a+")
         # f2 = open("./raw_scan.csv", "a+")
 
