@@ -50,7 +50,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
     tiltArmLength = 82.55 #in mm, = 3.25 inches - distance from lidar to servo tilt axis
     minTilt = restAngle - deltaTilt
     maxTilt = restAngle + deltaTilt
-    tiltStep = highRes ? 0.1 : 0.5
+    tiltStep = (0.5, 0.1)[highRes]
     
     tiltAngle = minTilt
     timestamp = int(time.time())
