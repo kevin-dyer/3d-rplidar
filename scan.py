@@ -86,6 +86,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 #Only save half rotation if halfPan === True
                 if halfPan and panAngle > 180:
                     continue
+
                 
                 #x = distance * sin(panAngle) * cos(tiltAngle)
                 #y = distance * sin(panAngle) * sin(tiltAngle)
