@@ -85,7 +85,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
                 #Only save half rotation if halfPan === True
                 if halfPan and panAngle > 180:
-                    console.log("panAngle: " + panAngle + "skipping!")
+                    print("panAngle: " + str(panAngle) + "skipping!")
                     continue
 
                 
@@ -94,7 +94,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 #z = distance * cos(panAngle)
                 panRad = radians(panAngle)
                 tiltRad = radians(tiltAngle) #off vertical
-                trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
+                trueTilt = radians(90 + restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
                 # trueTilt = radians(restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle - not sure if I shoujld use restAngle or 90
 
 
