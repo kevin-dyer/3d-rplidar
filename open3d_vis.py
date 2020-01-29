@@ -4,6 +4,7 @@
 import copy
 import numpy as np
 import open3d as o3d
+import sys
 
 import csv
 #import open3d
@@ -21,13 +22,27 @@ if __name__ == "__main__":
     # xyz[:, 2] = np.reshape(z_norm, -1)
     # print('xyz')
     # print(xyz)
-    with open('./scan.csv') as csv_file:
+    filename =  './scan_bkup.csv'
+
+    if len(sys.argv) > 1:
+        filename = str(sys.argv[1])
+
+    print("filename: " + filename)
+    # with open('./scan.csv') as csv_file:
+    with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
+        # xyz = np.array([])
         xyz = []
         for row in csv_reader:
 
+
+            # floatRow = [float(i) for i in row]
+            # print(len(floatRow))
+
             xyz.append(row)
+            # xyz.append(floatRow)
+            # np.append(xyz, floatRow)
             line_count += 1
 
             # if line_count == 0:
@@ -37,8 +52,13 @@ if __name__ == "__main__":
             #     print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
             #     line_count += 1
         # print(f'Processed {line_count} lines., xyz: ', xyz)
+        # print(xyz)
 
         # Pass xyz to Open3D.o3d.geometry.PointCloud and visualize
+
+        # print('shape')
+        # print(xyz)
+        # print(xyz.shape[1])
         pcd = o3d.geometry.PointCloud()
         pcd.points = o3d.utility.Vector3dVector(xyz)
         o3d.io.write_point_cloud("./sync.ply", pcd)

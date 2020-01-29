@@ -85,6 +85,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
                 #Only save half rotation if halfPan === True
                 if halfPan and panAngle > 180:
+                    console.log("panAngle: " + panAngle + "skipping!")
                     continue
 
                 
