@@ -26,7 +26,9 @@ GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-
+# Constants
+restAngle = 100
+tiltArmLength = 82.55 #in mm, == 3.25 inches - distance from lidar servo tilt axis
 
 # TODO: pass in config for start/stop angels and resolution
 def scan(deltaTilt=45, halfPan=False, highRes=False):
@@ -46,8 +48,6 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
     scan_data = []
     # raw_data = []
     isUp = True
-    restAngle = 100 #Angle where lidar is horizontal
-    tiltArmLength = 82.55 #in mm, = 3.25 inches - distance from lidar to servo tilt axis
     minTilt = restAngle - deltaTilt
     maxTilt = restAngle + deltaTilt
     tiltStep = (0.5, 0.1)[highRes]
@@ -58,7 +58,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        filename = 'scan-%s-%s-%d.csv'% (timestamp, ('full', 'half')[halfPan], ('low', 'high')[highRes])
+        filename = 'scan-%s-%s-%d.csv'% (('full', 'half')[halfPan], ('low', 'high')[highRes], timestamp)
         f = open('./' + filename, "a+")
         # f2 = open("./raw_scan.csv", "a+")
 
@@ -85,7 +85,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
                 #Only save half rotation if halfPan === True
                 if halfPan and panAngle > 180:
-                    break
+                    continue
                 
                 #x = distance * sin(panAngle) * cos(tiltAngle)
                 #y = distance * sin(panAngle) * sin(tiltAngle)
@@ -175,6 +175,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
 lidar.stop()
 lidar.stop_motor()
+kit.servo[0].angle = restAngle
 # BUtton Code
 while True:
 
@@ -194,10 +195,10 @@ while True:
         print('Button 2 Pressed')
         scan(45, True, False)
 
-    # Scan entire area, low res
+    # Scan entire area, low res. NOTE: max deltaTilt is 80 (restAngle + deltaTile >= 180)
     elif btn3 == False:
         print("Button 3")
-        scan(90, False, False)
+        scan(80, False, False)
 
     # Shutdown
     elif btn4 == False:
@@ -209,3 +210,4 @@ while True:
 lidar.stop()
 lidar.stop_motor()
 lidar.disconnect()
+kit.servo[0].angle = restAngle
