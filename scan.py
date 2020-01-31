@@ -92,15 +92,18 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 #x = distance * sin(panAngle) * cos(tiltAngle)
                 #y = distance * sin(panAngle) * sin(tiltAngle)
                 #z = distance * cos(panAngle)
-                panRad = radians(panAngle)
-                tiltRad = radians(tiltAngle) #off vertical
-                trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
-                # trueTilt = radians(restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle - not sure if I shoujld use restAngle or 90
+                # panRad = radians(panAngle)
+                panRad = radians(-panAngle) # inverse angle
+                # tiltRad = radians(tiltAngle) #off vertical
+                tiltRad = radians(tiltAngle - restAngle + 90) #off vertical
 
+                # trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
+                # trueTilt = radians(restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle - not sure if I shoujld use restAngle or 90
+                trueTilt = tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
 
                 # Offset to adjust for lidar sensor movement along tiltArmLength arc
-                deltaZ = tiltArmLength * (cos(tiltRad) - 1)
-                deltaY = tiltArmLength * sin(tiltRad)
+                deltaZ = tiltArmLength * (1 - cos(tiltRad))
+                deltaY = -tiltArmLength * sin(tiltRad)
 
 
                 x = distance * sin(trueTilt) * cos(panRad)
