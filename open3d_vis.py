@@ -40,10 +40,11 @@ if __name__ == "__main__":
             # floatRow = [float(i) for i in row]
             # print(len(floatRow))
 
-            xyz.append(row)
+            if len(row) == 3:
+                xyz.append(row)
             # xyz.append(floatRow)
             # np.append(xyz, floatRow)
-            line_count += 1
+            # line_count += 1
 
             # if line_count == 0:
             #     print(f'Column names are {", ".join(row)}')
