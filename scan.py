@@ -46,7 +46,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
 
     scan_data = []
-    # raw_data = []
+    raw_data = []
     isUp = True
     minTilt = restAngle - deltaTilt
     maxTilt = restAngle + deltaTilt
@@ -60,7 +60,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
         filename = 'scan-%s-%s-%d.csv'% (('full', 'half')[halfPan], ('low', 'high')[highRes], timestamp)
         f = open('./' + filename, "a+")
-        # f2 = open("./raw_scan.csv", "a+")
+        f2 = open("./raw_scan.csv", "a+")
 
         #print(lidar.info)
 
@@ -83,9 +83,12 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
             for (_, panAngle, distance) in scan:
                 #scan_data[min([359, floor(angle)])] = distance
 
+                if distance == 0:
+                    continue
+
                 #Only save half rotation if halfPan === True
                 if halfPan and panAngle > 180:
-                    print("panAngle: " + str(panAngle) + "skipping!")
+                    # print("panAngle: " + str(panAngle) + "skipping!")
                     continue
 
                 
@@ -102,8 +105,10 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 trueTilt = tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
 
                 # Offset to adjust for lidar sensor movement along tiltArmLength arc
-                deltaZ = tiltArmLength * (1 - cos(tiltRad))
-                deltaY = -tiltArmLength * sin(tiltRad)
+                # deltaZ = tiltArmLength * (1 - cos(tiltRad))
+                # deltaY = -tiltArmLength * sin(tiltRad)
+                deltaZ = 0
+                deltaY = 0
 
 
                 x = distance * sin(trueTilt) * cos(panRad)
@@ -115,7 +120,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 #scan_data.append([x, y, z])
                 #scan_data.append(x + ',' + y + ',' + z)
 
-                # raw_data.append("%f,%f,%f" % (tiltAngle, panAngle, distance))
+                raw_data.append("%f,%f,%f" % (tiltAngle, panAngle, distance))
 
             scan_string = '\n'.join(scan_data) + '\n'
             f.write(scan_string)
