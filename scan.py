@@ -102,7 +102,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
 
                 # trueTilt = radians(90) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
                 # trueTilt = radians(restAngle) + tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle - not sure if I shoujld use restAngle or 90
-                trueTilt = tiltRad * cos(panRad) # Tilt angle adjusted based on panAngle
+                trueTilt = tiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
 
                 # Offset to adjust for lidar sensor movement along tiltArmLength arc
                 # deltaZ = tiltArmLength * (1 - cos(tiltRad))
@@ -160,7 +160,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
         lidar.stop_motor()
 
         shutil.move('./%s'% filename, '/media/pi/USB30FD/%s'% filename)
-
+        shutil.move('./raw_scan.csv', '/media/pi/USB30FD/raw_scan.csv')
        # pcd = o3d.geometry.PointCloud()
        # pcd.points = o3d.utility.Vector3dVector(xyz)
        # o3d.io.write_point_cloud("./sync.ply", pcd)
