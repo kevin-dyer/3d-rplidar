@@ -58,9 +58,12 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
         # os.remove("./scan.csv")
         # os.remove("./raw_scan.csv")
 
-        filename = 'scan-%s-%s-%d.csv'% (('full', 'half')[halfPan], ('low', 'high')[highRes], timestamp)
-        f = open('./' + filename, "a+")
-        f2 = open("./raw_scan.csv", "a+")
+        fileId = '%s-%s-%d'% (('full', 'half')[halfPan], ('low', 'high')[highRes], timestamp)
+        # filename = 'scan-%s-%s-%d.csv'% (('full', 'half')[halfPan], ('low', 'high')[highRes], timestamp)
+        filename = 'scan-%s.csv'% fileId
+        f = open('./' + filename, "w")
+        rawFileName = 'raw-%s.csv'% fileId
+        f2 = open('./' + rawFileName, "w")
 
         #print(lidar.info)
 
@@ -99,8 +102,10 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
                 # Offset to adjust for lidar sensor movement along tiltArmLength arc
                 # deltaZ = tiltArmLength * (1 - cos(tiltRad))
                 # deltaY = -tiltArmLength * sin(tiltRad)
-                deltaZ = 0
-                deltaY = 0
+                # deltaZ = 0
+                # deltaY = 0
+                deltaY = tiltArmLength * cos(deltaTiltRad)
+                deltaZ = tiltArmLength * sin(deltaTiltRad)
 
 
                 x = distance * sin(trueTilt) * cos(panRad)
@@ -152,7 +157,7 @@ def scan(deltaTilt=45, halfPan=False, highRes=False):
         lidar.stop_motor()
 
         shutil.move('./%s'% filename, '/media/pi/USB30FD/%s'% filename)
-        shutil.move('./raw_scan.csv', '/media/pi/USB30FD/raw_scan.csv')
+        shutil.move('./%s'% rawFileName, '/media/pi/USB30FD/%s'% rawFileName)
        # pcd = o3d.geometry.PointCloud()
        # pcd.points = o3d.utility.Vector3dVector(xyz)
        # o3d.io.write_point_cloud("./sync.ply", pcd)

@@ -41,17 +41,21 @@ if __name__ == "__main__":
             distance = float(_distance)
             panRad = radians(180 - panAngle) # inverse angle
             deltaTiltRad = radians(tiltAngle - restAngle) # 0 at top (when laser is at 90deg)
-            trueTilt = radians(90) + deltaTiltRad * sin(panRad) # Tilt angle adjusted based on panAngle
+            trueTilt = radians(90) + deltaTiltRad * sin(panRad) # Tilt angle adjusted based on panAngle & orientation of laser @90deg
 
             # Offset to adjust for lidar sensor movement along tiltArmLength arc
             # deltaZ = tiltArmLength * (1 - cos(deltaTiltRad))
-            # deltaY = -tiltArmLength * sin(deltaTiltRad)
-            deltaZ = 0
-            deltaY = 0
+            # deltaY = tiltArmLength * sin(deltaTiltRad)
+            # deltaZ = 0
+            # deltaY = 0
+
+            # another attempt:
+            deltaY = tiltArmLength * cos(deltaTiltRad)
+            deltaZ = tiltArmLength * sin(deltaTiltRad)
 
 
-            x = distance * sin(trueTilt) * cos(panRad)
-            y = distance * sin(trueTilt) * sin(panRad) + deltaY
+            x = distance * sin(trueTilt) * cos(panRad) + deltaY
+            y = distance * sin(trueTilt) * sin(panRad)
             z = distance * cos(trueTilt) + deltaZ
 
             #scan_data.append({'x': x, 'y': y, 'z': z})
